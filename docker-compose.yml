@@ -1,0 +1,36 @@
+# docker-compose
+version: '3.4'
+
+services:
+  conversor-monetario-api:
+    container_name: conversor-monetario-api
+    build:
+      # A configuração do 'args' possibilita o nosso IF funcionar no Dockerfile
+      args:
+        - FLASK_ENV=dev
+      context: .
+    volumes:
+      - ./src:/src
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongodb
+    networks:
+      - flask_net
+    environment:
+      - FLASK_ENV=dev
+      - API_KEY=f5c3e0d51dedadc55636f9ef
+    restart: always
+
+  mongodb:
+    image: mongo:5.0.7
+    container_name: mongo_db
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - flask_net
+
+networks:
+  flask_net:
+    driver: bridge
